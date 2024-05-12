@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { cn } from "@/lib/utils"
-import { Inter as FontSans } from "next/font/google"
+import { cn } from "@/lib/utils";
+import { Inter as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
+import Link from "next/link";
+import Image from "next/image";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +15,7 @@ export const metadata: Metadata = {
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
-})
+});
 
 export default function RootLayout({
   children,
@@ -22,23 +24,45 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-       <body
+      <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.className,
+          fontSans.className
         )}
       >
         <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <div className="absolute right-3 top-3">
-              <ModeToggle/>
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="absolute right-3 top-3">
+            <ModeToggle />
+          </div>
+          <nav className="sticky top-0 bg-white w-full shadow-md z-10">
+            <div className="w-full mx-auto px-8">
+              <div className="flex items-center justify-between h-16">
+                <div>
+                  <Image width={40} height={40} src="/logo.jpg" alt="Logo" />
+                </div>
+                <div className="flex-shrink-0 flex items-center">
+                  <Link href="/">
+                    <span className="text-4xl font-bold">Qur'anKu</span>
+                  </Link>
+                </div>
+                <div className="hidden md:block">
+                  <div className="ml-auto flex items-baseline space-x-6 font-semibold"> 
+                    <Link href="/quran">Al Quran</Link>
+                    <Link href="/list">Surah List</Link>
+                    <Link href="/about">About</Link>
+                    <Link href="/contact">Contact</Link>
+                  </div>
+                </div>
+              </div>
             </div>
-            {children}
-          </ThemeProvider>
+          </nav>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
