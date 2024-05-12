@@ -36,10 +36,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="absolute right-3 top-3">
-            <ModeToggle />
-          </div>
-          <nav className="sticky top-0 bg-white w-full shadow-md z-10">
+          <nav className="sticky top-0 w-full bg-white dark:bg-slate-950 shadow-md z-10">
             <div className="w-full mx-auto px-8">
               <div className="flex items-center justify-between h-16">
                 <div>
@@ -51,11 +48,12 @@ export default function RootLayout({
                   </Link>
                 </div>
                 <div className="hidden md:block">
-                  <div className="ml-auto flex items-baseline space-x-6 font-semibold"> 
+                  <div className="ml-auto flex items-center  space-x-6 font-semibold"> 
                     <Link href="/quran">Al Quran</Link>
                     <Link href="/list">Surah List</Link>
                     <Link href="/about">About</Link>
                     <Link href="/contact">Contact</Link>
+                    <div><ModeToggle /></div>
                   </div>
                 </div>
               </div>
