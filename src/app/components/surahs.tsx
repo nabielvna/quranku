@@ -27,9 +27,9 @@ export function SurahsGrid() {
     <main className="w-[80%] grid grid-cols-3 gap-4 p-4">
       {surahList.map((surah) => (
         <Link key={surah.nomor} href={`/quran/${surah.nomor}`}>
-          <div className="p-4 border rounded-md text-right bg-primary-background hover:bg-gradient-to-tr hover:from-pink-100 hover:to-cyan-100">
+          <div className="p-4 border rounded-md text-right bg-slate-100 dark:bg-slate-950 hover:bg-[url('/hero.png')] hover:bg-center hover:bg-cover hover:text-white">
             <h2 className="text-xl font-semibold">{surah.nama}</h2>
-            <p className="text-gray-600">{surah.namaLatin} | {surah.arti}</p>
+            <p className="">{surah.namaLatin} | {surah.arti}</p>
             <p>{surah.jumlahAyat} Ayahs</p>
           </div>
         </Link>

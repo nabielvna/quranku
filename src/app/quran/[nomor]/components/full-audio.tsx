@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,28 +10,51 @@ import {
 
 type AudioUrls = Record<string, string>;
 
+type ReciterData = {
+  id: number;
+  name: string;
+  audioUrls: AudioUrls;
+};
+
 export const AudioPlayerDropdown = ({ audioUrls }: { audioUrls: AudioUrls }) => {
-  const [selectedAudio, setSelectedAudio] = useState(Object.keys(audioUrls)[0]);
-  
-  const handleAudioChange = (audioKey: string) => {
-    setSelectedAudio(audioKey);
+  const [selectedReciter, setSelectedReciter] = useState<string>(""); 
+
+  useEffect(() => {
+    if (Object.keys(audioUrls).length > 0) {
+      const defaultReciterName = getReciterNameFromUrl(audioUrls[Object.keys(audioUrls)[0]]);
+      setSelectedReciter(defaultReciterName); 
+    }
+  }, [audioUrls]);
+
+  const getReciterNameFromUrl = (audioUrl: string) => {
+    const parts = audioUrl.split("/");
+    const reciterNameWithDash = parts[parts.length - 2]; 
+    const reciterName = reciterNameWithDash.replace(/-/g, ' '); 
+    return reciterName;
+  };
+
+  const handleAudioChange = (audioUrl: string) => {
+    setSelectedReciter(getReciterNameFromUrl(audioUrl)); 
+    const audioElement = document.getElementById("audioPlayer") as HTMLAudioElement;
+    audioElement.src = audioUrl;
   };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>Choose Audio</DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {Object.keys(audioUrls).map((key) => (
-          <DropdownMenuItem key={key} onClick={() => handleAudioChange(key)}>
-            {key}
+      <DropdownMenuTrigger className="bg-blue-600 rounded-full text-white px-3 py-1 hover:bg-blue-500 mb-2">{selectedReciter || "Choose Reciter"}</DropdownMenuTrigger> 
+      <DropdownMenuContent className="mt-2">
+        {Object.entries(audioUrls).map(([key, audioUrl]) => (
+          <DropdownMenuItem className="m-1 cursor-pointer" key={key} onClick={() => handleAudioChange(audioUrl)}>
+            {getReciterNameFromUrl(audioUrl)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
-      <audio controls>
-        {/* Update the source based on the selectedAudio state */}
-        <source src={audioUrls[selectedAudio]} type="audio/mpeg" />
+      <audio id="audioPlayer" controls className="w-full h-[40px]">
+        <source src="" type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </DropdownMenu>
   );
 };
+
+export default AudioPlayerDropdown;

@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 
 export default function Page() {
   return (
-    <main className="h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col">
       <section className="w-full h-[70vh] flex flex-col items-center justify-center relative text-white bg-[url('/hero.png')] bg-center bg-cover">
         <div className="absolute inset-0 bg-black opacity-15"></div>
         <div className="text-center flex flex-col items-center justify-center space-y-2 w-[50%] relative z-10">

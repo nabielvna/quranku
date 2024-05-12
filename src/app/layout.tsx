@@ -60,6 +60,9 @@ export default function RootLayout({
             </div>
           </nav>
           {children}
+          <footer className="w-full py-4 bg-gray-200 dark:bg-slate-800 text-center">
+            <p>&copy; {new Date().getFullYear()} Lucky Strike Team. All rights reserved.</p>
+          </footer>
         </ThemeProvider>
       </body>
     </html>
