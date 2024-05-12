@@ -47,7 +47,7 @@ export default function RootLayout({
                 </div>
                 <div className="flex-shrink-0 flex items-center">
                   <Link href="/">
-                    <span className="text-4xl font-bold">Qur'anKu</span>
+                    <span className="text-4xl font-bold">Qur&apos;anKu</span>
                   </Link>
                 </div>
                 <div className="hidden md:block">

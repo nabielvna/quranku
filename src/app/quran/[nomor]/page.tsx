@@ -1,5 +1,3 @@
-"use client"
-
 import { fetchSurah } from "@/lib/api"
 import type { Surah } from "@/types/types"
 import { AudioPlayerDropdown } from "./components/full-audio";
