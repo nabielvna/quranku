@@ -7,7 +7,7 @@ export default function Page() {
         <span className="text-6xl font-bold text-white">QURANKU</span>
       </div>
       <div className="w-full flex flex-col items-center">
-        <SurahsGrid/>
+        <SurahsGrid />
       </div>
     </main>
   )

@@ -1,16 +1,37 @@
-import { fetchSurah } from "@/lib/api"
-import type { Surah } from "@/types/types"
+"use client"
+
+import { useEffect, useState } from "react";
+import { fetchSurah } from "@/lib/api";
+import type { Surah } from "@/types/types";
 import { AudioPlayerDropdown } from "./components/full-audio";
 import { Separator } from "@/components/ui/separator";
+import ViewOption from './components/view-option';
+import QuranAyah from "./components/ayah";
 
-export default async function Page({ params }: { params: { nomor: string } }) {
-  const response = await fetchSurah(params.nomor)
+const Page = ({ params }: { params: { nomor: string } }) => {
+  const [surahs, setSurahs] = useState<Surah[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(['Ayat']); 
 
-  if (response && response.data) {
-    const surahs: Surah[] = Array.isArray(response.data) ? response.data : [response.data];
+  useEffect(() => {
+    const fetchSurahData = async () => {
+      const response = await fetchSurah(params.nomor);
+      if (response && response.data) {
+        const data: Surah[] = Array.isArray(response.data) ? response.data : [response.data];
+        setSurahs(data);
+      }
+    };
 
-    return (
-      <main className="min-h-screen">
+    fetchSurahData(); 
+  }, [params.nomor]); 
+
+  const handleOptionChange = (option: string) => {
+    const isSelected = selectedOptions.includes(option);
+    setSelectedOptions(isSelected ? selectedOptions.filter((item) => item !== option) : [...selectedOptions, option]);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow">
         {surahs.map((surah) => (
           <div key={surah.nomor}>
             <div className="w-full pb-10 px-10">
@@ -21,34 +42,35 @@ export default async function Page({ params }: { params: { nomor: string } }) {
                   <p>{surah.arti}</p>
                 </div>
               </div>
-              <div className="rounded-2xl border-solid border-2 p-5">
+              <div className="relative w-full rounded-2xl border-2 border-solid p-4">
+                <div className="absolute top-5 right-5">
+                  <ViewOption options={['Ayat', 'Latin', 'Terjemah']} onSelectOption={handleOptionChange} selectedOption={selectedOptions} />
+                </div>
                 <p className="font-bold">{surah.jumlahAyat} Ayat</p>
                 <p className="font-bold">Tempat Turun</p>
                 <p>{surah.tempatTurun}</p>
                 <p className="font-bold">Deskripsi</p>
-                <p><span dangerouslySetInnerHTML={{ __html: surah.deskripsi }} /></p>
-                <br/>
+                <p className="mb-5"><span dangerouslySetInnerHTML={{ __html: surah.deskripsi }} /></p>
+                
                 <AudioPlayerDropdown audioUrls={surah.audioFull} />
               </div>
             </div>
 
-
             <div className="px-10">
-              {surah.ayat.map((ayah) => (
-                <div key={ayah.nomorAyat}>
-                  <div className="flex flex-col space-y-2 my-5">
-                    <span className="text-end text-xl font-semibold mt-2">{ayah.teksArab} - {ayah.nomorAyat.toLocaleString('ar')}</span>
-                    <span> {ayah.teksIndonesia} </span>
-                  </div>
-                  <Separator/>
-                </div>
-              ))}
+            {surah.ayat.map((ayah) => (
+              <div key={ayah.nomorAyat}>
+                {selectedOptions.includes('Ayat') && <QuranAyah ayah={ayah} selectedOption="Ayat" />} 
+                {selectedOptions.includes('Latin') && <QuranAyah ayah={ayah} selectedOption="Latin" />}
+                {selectedOptions.includes('Terjemah') && <QuranAyah ayah={ayah} selectedOption="Terjemah" />}
+                <Separator />
+              </div>
+            ))}
             </div>
           </div>
         ))}
       </main>
-    )
-  } else {
-    return <div>No data available</div>;
-  }
-}
+    </div>
+  );
+};
+
+export default Page;

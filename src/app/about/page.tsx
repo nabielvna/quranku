@@ -8,7 +8,7 @@ export default function Page() {
   ];
 
   return (
-    <main className="flex flex-col w-full h-max-screen items-center p-10">
+    <main className="flex flex-col w-full h-screen max-h-screen items-center p-10">
       <div className="flex flex-row space-x-10">
         {images.map((image, index) => (
           <div key={index}>

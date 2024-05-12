@@ -35,7 +35,7 @@ export const AudioPlayerDropdown = ({ audioUrls }: { audioUrls: AudioUrls }) => 
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="bg-blue-600 rounded-full text-white px-3 py-1 hover:bg-blue-500 mb-2">{selectedReciter || "Choose Reciter"}</DropdownMenuTrigger> 
+      <DropdownMenuTrigger className="bg-blue-600 rounded-full text-white px-3 text-sm hover:bg-blue-500 mb-2">{selectedReciter || "Choose Reciter"}</DropdownMenuTrigger> 
       <DropdownMenuContent className="mt-2">
         {Object.entries(audioUrls).map(([key, audioUrl]) => (
           <DropdownMenuItem className="m-1 cursor-pointer" key={key} onClick={() => handleAudioChange(audioUrl)}>
