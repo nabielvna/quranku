@@ -10,12 +10,6 @@ import {
 
 type AudioUrls = Record<string, string>;
 
-type ReciterData = {
-  id: number;
-  name: string;
-  audioUrls: AudioUrls;
-};
-
 export const AudioPlayerDropdown = ({ audioUrls }: { audioUrls: AudioUrls }) => {
   const [selectedReciter, setSelectedReciter] = useState<string>(""); 
 

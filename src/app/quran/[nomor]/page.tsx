@@ -13,7 +13,7 @@ export default async function Page({ params }: { params: { nomor: string } }) {
       <main className="min-h-screen">
         {surahs.map((surah) => (
           <div key={surah.nomor}>
-            <div className="w-full p-10">
+            <div className="w-full pb-10 px-10">
               <div className="w-full flex my-10 flex-col items-center space-y-3">
                 <p className="font-bold text-4xl">{surah.nama}</p>
                 <div className="flex flex-col text-center items-center">
@@ -37,7 +37,7 @@ export default async function Page({ params }: { params: { nomor: string } }) {
               {surah.ayat.map((ayah) => (
                 <div key={ayah.nomorAyat}>
                   <div className="flex flex-col space-y-2 my-5">
-                    <span className="text-end text-xl font-semibold mt-2">{ayah.teksArab} - {ayah.nomorAyat}</span>
+                    <span className="text-end text-xl font-semibold mt-2">{ayah.teksArab} - {ayah.nomorAyat.toLocaleString('ar')}</span>
                     <span> {ayah.teksIndonesia} </span>
                   </div>
                   <Separator/>
