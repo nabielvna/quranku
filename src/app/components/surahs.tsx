@@ -1,9 +1,9 @@
 "use client"
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { fetchSurahs } from "@/lib/api";
 import type { Surah } from "@/types/types";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 interface SurahsGridProps {
   limit?: {
@@ -16,7 +16,12 @@ interface SurahsGridProps {
 export function SurahsGrid({ limit }: SurahsGridProps) {
   const [surahList, setSurahList] = useState<Surah[]>([]);
   const [randomSurahIndices, setRandomSurahIndices] = useState<number[]>([]);
-  const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
+  const [screenWidth, setScreenWidth] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth;
+    }
+    return 0;
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,11 +41,12 @@ export function SurahsGrid({ limit }: SurahsGridProps) {
       setScreenWidth(window.innerWidth);
     };
 
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, []);
 
   useEffect(() => {
