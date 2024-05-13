@@ -39,7 +39,12 @@ export default function Navbar() {
               <SheetTrigger><Menu size={20} strokeWidth={1.5} /></SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>QURANKU</SheetTitle>
+                  <SheetTitle className="flex flex-row space-y-3 justify-center items-center">
+                    QURANKU
+                    <div>
+                      <ModeToggle/>
+                    </div>
+                  </SheetTitle>
                 </SheetHeader>
                 <div className="py-4 space-y-2">
                   <Link className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition duration-300 ease-in-out" href="/quran">
