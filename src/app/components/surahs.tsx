@@ -75,7 +75,7 @@ export function SurahsGrid({ limit }: SurahsGridProps) {
           <div className="border-2 rounded-sm flex flex-row justify-between items-center p-3 hover:border-teal-300 hover:shadow-teal-300 hover:shadow-xs">
             <div className="flex flex-row gap-3">
               <div className="flex flex-col justify-center mx-3">
-                <p className="font-bold">{`${surah.nomor.toLocaleString('ar-EG')}`}</p>
+                <p className="font-bold">{Number(surah.nomor).toLocaleString('ar-EG')}</p>
               </div>
               <div className="flex flex-col justify-center">
                 <p className="font-semibold">{surah.namaLatin}</p>
