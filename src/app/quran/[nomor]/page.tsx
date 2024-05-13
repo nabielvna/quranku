@@ -1,28 +1,56 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { fetchSurah } from "@/lib/api";
-import type { Surah } from "@/types/types";
-import { AudioPlayerDropdown } from "./components/full-audio";
+import { fetchChapters, fetchVersesByChapter, fetchQuranVersesUthmani } from "@/lib/api";
+import type { Chapter, VerseUthmani, VersesByChapter } from "@/types/types";
 import { Separator } from "@/components/ui/separator";
 import ViewOption from './components/view-option';
-import QuranAyah from "./components/ayah";
+import QuranVerse from "./components/verse";
+
+const convertVersesToUthmani = (verses: any[]): VerseUthmani[] => {
+  return verses.map((verse) => ({
+    id: verse.id,
+    verse_key: verse.verse_key,
+    text_uthmani: "", 
+  }));
+};
 
 const Page = ({ params }: { params: { nomor: string } }) => {
-  const [surahs, setSurahs] = useState<Surah[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(['Ayat']); 
+  // State variables
+  const [chapter, setChapter] = useState<Chapter | null>(null);
+  const [versesUthmani, setVersesUthmani] = useState<VerseUthmani[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(['Ayat']);
 
   useEffect(() => {
-    const fetchSurahData = async () => {
-      const response = await fetchSurah(params.nomor);
-      if (response && response.data) {
-        const data: Surah[] = Array.isArray(response.data) ? response.data : [response.data];
-        setSurahs(data);
+    const fetchData = async () => {
+      try {
+        const chapters = await fetchChapters();
+        const currentChapter = chapters.find((chapter: Chapter) => chapter.id === parseInt(params.nomor));
+        setChapter(currentChapter || null);
+
+        if (currentChapter) {
+          const firstPageData: VersesByChapter = await fetchVersesByChapter(params.nomor, 1, 50);
+          const totalPages = firstPageData.pagination.total_pages;
+
+          const allVerses: VerseUthmani[] = [];
+          for (let i = 1; i <= totalPages; i++) {
+            const pageData: VersesByChapter = await fetchVersesByChapter(params.nomor, i, 50);
+            const convertedVerses = convertVersesToUthmani(pageData.verses);
+            
+            const promises = convertedVerses.map((verse) => fetchQuranVersesUthmani(verse.verse_key));
+            const uthmaniVerses = await Promise.all(promises);
+            allVerses.push(...uthmaniVerses.flat());
+            
+            setVersesUthmani(allVerses);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchSurahData(); 
-  }, [params.nomor]); 
+    fetchData();
+  }, [params.nomor]);
 
   const handleOptionChange = (option: string) => {
     const isSelected = selectedOptions.includes(option);
@@ -32,42 +60,36 @@ const Page = ({ params }: { params: { nomor: string } }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
-        {surahs.map((surah) => (
-          <div key={surah.nomor}>
+        {chapter && (
+          <div>
             <div className="w-full pb-10 px-10">
               <div className="w-full flex my-10 flex-col items-center space-y-3">
-                <p className="font-bold text-4xl">{surah.nama}</p>
+                <p className="font-bold text-4xl">{chapter.name_arabic}</p>
                 <div className="flex flex-col text-center items-center">
-                  <p className="text-lg font-semibold">{surah.namaLatin}</p>
-                  <p>{surah.arti}</p>
+                  <p className="text-lg font-semibold">{chapter.name_complex}</p>
+                  <p>{chapter.translated_name.name}</p>
                 </div>
               </div>
               <div className="relative w-full rounded-2xl border-2 border-solid p-4">
                 <div className="absolute top-5 right-5">
                   <ViewOption options={['Ayat', 'Latin', 'Terjemah']} onSelectOption={handleOptionChange} selectedOption={selectedOptions} />
                 </div>
-                <p className="font-bold">{surah.jumlahAyat} Ayat</p>
+                <p className="font-bold">{chapter.verses_count} Ayat</p>
                 <p className="font-bold">Tempat Turun</p>
-                <p>{surah.tempatTurun}</p>
-                <p className="font-bold">Deskripsi</p>
-                <p className="mb-5"><span dangerouslySetInnerHTML={{ __html: surah.deskripsi }} /></p>
-                
-                <AudioPlayerDropdown audioUrls={surah.audioFull} />
+                <p>{chapter.revelation_place}</p>
               </div>
             </div>
 
             <div className="px-10">
-            {surah.ayat.map((ayah) => (
-              <div key={ayah.nomorAyat}>
-                {selectedOptions.includes('Ayat') && <QuranAyah ayah={ayah} selectedOption="Ayat" />} 
-                {selectedOptions.includes('Latin') && <QuranAyah ayah={ayah} selectedOption="Latin" />}
-                {selectedOptions.includes('Terjemah') && <QuranAyah ayah={ayah} selectedOption="Terjemah" />}
-                <Separator />
-              </div>
-            ))}
+              {versesUthmani.map((verseUthmani) => (
+                <div key={verseUthmani.verse_key}>
+                  <QuranVerse verse={verseUthmani} selectedOptions={selectedOptions} />
+                  <Separator />
+                </div>
+              ))}
             </div>
           </div>
-        ))}
+        )}
       </main>
     </div>
   );
