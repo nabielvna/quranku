@@ -34,7 +34,7 @@ export default function Navbar() {
               <div><ModeToggle /></div>
             </div>
           </div>
-          <div>
+          <div className="block md:hidden">
             <Sheet>
               <SheetTrigger><Menu size={20} strokeWidth={1.5} /></SheetTrigger>
               <SheetContent>
