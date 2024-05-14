@@ -23,9 +23,7 @@ const QuranVerse: React.FC<Props> = ({ verse, selectedOptions }) => {
   return (
     <div className="flex flex-col space-y-2 my-5">
       <div className="flex flex-col mt-2">
-        {selectedOptions.includes('Ayat') && (
-          <span className="text-end text-xl font-semibold">{verse.text_uthmani} - {getArabicVerseKey()}</span>
-        )}
+        <span className="text-end text-xl font-semibold">{verse.text_uthmani} - {getArabicVerseKey()}</span>
 
         {selectedOptions.includes('Latin') && (
           <span> {verse.verse_key}</span>

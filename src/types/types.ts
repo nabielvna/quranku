@@ -27,7 +27,6 @@ export interface VersesByChapter {
   };
 }
 
-
 export interface Chapter {
   id: number;
   revelation_place: string;
@@ -42,4 +41,13 @@ export interface Chapter {
     language_name: string;
     name: string;
   };
+}
+
+export interface ChapterInfo {
+  id: number;
+  chapter_id: number;
+  language_name: string;
+  short_text: string;
+  source: string;
+  text: string;
 }

@@ -6,6 +6,9 @@ import type { Chapter, VerseUthmani, VersesByChapter } from "@/types/types";
 import { Separator } from "@/components/ui/separator";
 import ViewOption from './components/view-option';
 import QuranVerse from "./components/verse";
+import ChapterInfoComponent from "./components/chapter-info";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const convertVersesToUthmani = (verses: any[]): VerseUthmani[] => {
   return verses.map((verse) => ({
@@ -19,7 +22,13 @@ const Page = ({ params }: { params: { number: string } }) => {
   // State variables
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [versesUthmani, setVersesUthmani] = useState<VerseUthmani[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(['Ayat']);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(['']);
+
+  const chapterNumber = parseInt(params.number);
+  const previousChapter = chapterNumber - 1;
+  const nextChapter = chapterNumber + 1;
+  const prevDisabled = chapterNumber < 2;
+  const nextDisabled = chapterNumber > 113;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +73,13 @@ const Page = ({ params }: { params: { number: string } }) => {
           <div>
             <div className="w-full pb-10 px-10">
               <div className="w-full flex my-10 flex-col items-center space-y-3">
-                <p className="font-bold text-4xl">{chapter.name_arabic}</p>
+                <div className="flex items-center space-x-3">
+                  <Link className={prevDisabled ? 'hidden' : ''}  href={`/quran/${previousChapter}`}><ChevronLeft size={32} /></Link>
+                  <ChevronLeft className={prevDisabled ? '' : 'hidden'} size={32} />
+                  <p className="font-bold text-4xl">{chapter.name_arabic}</p>
+                  <ChevronRight className={nextDisabled ? '' : 'hidden'} size={32} />
+                  <Link className={nextDisabled ? 'hidden' : ''} href={`/quran/${nextChapter}`}><ChevronRight size={32}/></Link>
+                </div>
                 <div className="flex flex-col text-center items-center">
                   <p className="text-lg font-semibold">{chapter.name_complex}</p>
                   <p>{chapter.translated_name.name}</p>
@@ -72,11 +87,13 @@ const Page = ({ params }: { params: { number: string } }) => {
               </div>
               <div className="relative w-full rounded-2xl border-2 border-solid p-4">
                 <div className="absolute top-5 right-5">
-                  <ViewOption options={['Ayat', 'Latin', 'Terjemah']} onSelectOption={handleOptionChange} selectedOption={selectedOptions} />
+                  <ViewOption options={['Latin', 'Translation']} onSelectOption={handleOptionChange} selectedOption={selectedOptions} />
                 </div>
-                <p className="font-bold">{chapter.verses_count} Ayat</p>
-                <p className="font-bold">Tempat Turun</p>
+                <p className="font-bold">{chapter.verses_count} Verses</p>
+                <p className="font-bold">Revelation place</p>
                 <p>{chapter.revelation_place}</p>
+                <p className="font-bold">Info</p>
+                <ChapterInfoComponent id={parseInt(params.number)}/>
               </div>
             </div>
 

@@ -49,3 +49,18 @@ export async function fetchChapters(id?: number) {
     throw error;
   }
 }
+
+export async function fetchChapterInfo(id: number) {
+  try {
+    const url = `${API_URL}/chapters/${id}/info`
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch chapters');
+    }
+    const data = await response.json();
+    return data.chapter_info;
+  } catch (error) {
+    console.error('Error fetching chapter info:', error);
+    throw error;
+  }
+}

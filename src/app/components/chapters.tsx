@@ -9,7 +9,17 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface SurahsGridProps {
   limit?: {
@@ -17,10 +27,12 @@ interface SurahsGridProps {
     mediumScreen?: number;
     largeScreen?: number;
   };
+  isSearchEnabled: boolean;
 }
 
-export function ChaptersGrid({ limit }: SurahsGridProps) {
+export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
   const [chapterList, setChapterList] = useState<Chapter[]>([]);
+  const [filteredChapters, setFilteredChapters] = useState<Chapter[]>([]);
   const [randomChapterIndices, setRandomChapterIndices] = useState<number[]>([]);
   const [screenWidth, setScreenWidth] = useState<number>(() => {
     if (typeof window !== 'undefined') {
@@ -30,6 +42,7 @@ export function ChaptersGrid({ limit }: SurahsGridProps) {
   });
   const [hoveredChapterId, setHoveredChapterId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +50,7 @@ export function ChaptersGrid({ limit }: SurahsGridProps) {
         const response = await fetchChapters();
         if (response) {
           setChapterList(response);
+          setFilteredChapters(response);
         }
       } catch (error) {
         console.error("Error fetching chapters:", error);
@@ -81,68 +95,103 @@ export function ChaptersGrid({ limit }: SurahsGridProps) {
     }
   }, [chapterList, limit, screenWidth]);
 
-  const displayedChapters = limit ? randomChapterIndices.map((index) => chapterList[index]) : chapterList;
+  useEffect(() => {
+    const filtered = chapterList.filter((chapter) =>
+      chapter.name_complex.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chapter.translated_name.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chapter.name_simple.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chapter.name_complex.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chapter.name_arabic.includes(searchQuery)
+    );
+    setFilteredChapters(filtered);
+  }, [searchQuery, chapterList]);
+
+  const displayedChapters = limit ? randomChapterIndices.map((index) => chapterList[index]) : filteredChapters;
 
   return (
-    <main className="w-full md:w-[85%] lg:w-[75%] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
-      {error && <p className="text-red-500">{error}</p>}
-      {displayedChapters.map((chapter) => (
-        <HoverCard key={chapter.id}>
-          <HoverCardTrigger
-            onMouseEnter={() => setHoveredChapterId(chapter.id)}
-            onMouseLeave={() => setHoveredChapterId(null)}
-          >
-            <Link key={chapter.id} href={`/quran/${chapter.id}`}>
-              <div className="border-2 rounded-sm flex flex-row justify-between items-center p-3 hover:border-teal-300 hover:shadow-teal-300 hover:shadow-xs">
-                <div className="flex flex-row gap-3">
-                  <div className="flex flex-col justify-center mx-3">
-                    <p className="font-bold">{Number(chapter.id).toLocaleString('ar-EG')}</p>
+    <main className="w-full md:w-[85%] lg:w-[75%]">
+      {isSearchEnabled && (
+        <div className="px-4 w-full flex justify-between">
+          <div className="relative w-[45%] flex space-x-3">
+            <Input
+              className="border-2"
+              placeholder="Search chapter"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Search className="text-gray-400 absolute right-2 top-1/2 -translate-y-1/2"/>
+          </div>
+          <Select>
+            <SelectTrigger className="w-[180px] border-2">
+              <SelectValue placeholder="Filter" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="chapter">Chapter</SelectItem>
+              <SelectItem value="juz">Juz</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
+        {error && <p className="text-red-500">{error}</p>}
+        {displayedChapters.map((chapter) => (
+          <HoverCard key={chapter.id}>
+            <HoverCardTrigger
+              onMouseEnter={() => setHoveredChapterId(chapter.id)}
+              onMouseLeave={() => setHoveredChapterId(null)}
+            >
+              <Link key={chapter.id} href={`/quran/${chapter.id}`}>
+                <div className="border-2 rounded-sm flex flex-row justify-between items-center p-3 hover:border-teal-300 hover:shadow-teal-300 hover:shadow-xs">
+                  <div className="flex flex-row gap-3">
+                    <div className="flex flex-col justify-center mx-3">
+                      <p className="font-bold">{Number(chapter.id).toLocaleString('ar-EG')}</p>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <p className="text-sm font-semibold">{chapter.name_complex}</p>
+                      <p className="text-xs">{chapter.translated_name.name}</p>
+                    </div>
                   </div>
-                  <div className="flex flex-col justify-center">
-                    <p className="text-sm font-semibold">{chapter.name_complex}</p>
-                    <p className="text-xs">{chapter.translated_name.name}</p>
+                  <div className="flex flex-col justify-end text-end flex-grow-0 w-auto">
+                    <p className="font-bold text-sm">{chapter.name_arabic}</p>
+                    <p className="text-xs">{chapter.verses_count} Verses</p>
                   </div>
                 </div>
-                <div className="flex flex-col justify-end text-end flex-grow-0 w-auto">
-                  <p className="font-bold text-sm">{chapter.name_arabic}</p>
-                  <p className="text-xs">{chapter.verses_count} Verses</p>
-                </div>
-              </div>
-            </Link>
-          </HoverCardTrigger>
-          {hoveredChapterId === chapter.id && (
-            <HoverCardContent className="w-fit">
-              <div className="flex flex-col">
+              </Link>
+            </HoverCardTrigger>
+            {hoveredChapterId === chapter.id && (
+              <HoverCardContent className="w-fit">
                 <div className="flex flex-col">
-                  <p className="font-bold text-xs">{chapter.name_simple}</p>
+                  <div className="flex flex-col">
+                    <p className="font-bold text-xs">{chapter.name_simple}</p>
+                    <Separator className="mb-1 mt-2"/>
+                    <p  className="font-bold text-xs">Revelation</p>
+                    <div className="flex flex-row justify-between capitalize font-semibold text-xs space-x-10">
+                      <span>Place:</span>
+                      <span>{chapter.revelation_place}</span>
+                    </div>
+                    <div className="flex flex-row justify-between capitalize font-semibold text-xs">
+                      <span>Order:</span>
+                      <span>{chapter.revelation_order}</span>
+                    </div>
+                  </div>
                   <Separator className="mb-1 mt-2"/>
-                  <p  className="font-bold text-xs">Revelation</p>
-                  <div className="flex flex-row justify-between capitalize font-semibold text-xs space-x-10">
-                    <span>Place:</span>
-                    <span>{chapter.revelation_place}</span>
-                  </div>
-                  <div className="flex flex-row justify-between capitalize font-semibold text-xs">
-                    <span>Order:</span>
-                    <span>{chapter.revelation_order}</span>
-                  </div>
+                  {chapter.pages.length > 0 && (
+                    <p className="flex flex-row justify-between font-semibold text-xs">
+                      <span >Pages:</span>{" "}
+                      {chapter.pages.reduce((acc: (number | string)[], page) => {
+                        if (!acc.includes(page)) {
+                          acc.push(page);
+                        }
+                        return acc;
+                      }, []).join(' - ')}
+                    </p>
+                  )}
                 </div>
-                <Separator className="mb-1 mt-2"/>
-                {chapter.pages.length > 0 && (
-                  <p className="flex flex-row justify-between font-semibold text-xs">
-                    <span >Pages:</span>{" "}
-                    {chapter.pages.reduce((acc: (number | string)[], page) => {
-                      if (!acc.includes(page)) {
-                        acc.push(page);
-                      }
-                      return acc;
-                    }, []).join(' - ')}
-                  </p>
-                )}
-              </div>
-            </HoverCardContent>
-          )}
-        </HoverCard>
-      ))}
+              </HoverCardContent>
+            )}
+          </HoverCard>
+        ))}
+      </div>
     </main>
   );
 }
