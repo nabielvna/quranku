@@ -1,5 +1,5 @@
 import { VerseUthmani } from "@/types/types";
-import { latinToArabic } from "@/utils/number-dict";
+import { convertLatinToArabic } from "@/utils/number-dict";
 
 type Props = {
   verse: VerseUthmani;
@@ -7,9 +7,6 @@ type Props = {
 };
 
 const QuranVerse: React.FC<Props> = ({ verse, selectedOptions }) => {
-  const convertLatinToArabic = (latinNumber: string) => {
-    return latinNumber.split('').map(digit => latinToArabic[digit] || digit).join('');
-  };
 
   const getArabicVerseKey = () => {
     const colonIndex = verse.verse_key.indexOf(':');

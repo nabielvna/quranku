@@ -1,5 +1,9 @@
 // File: numberdict.ts
 
+export const convertLatinToArabic = (latinNumber: string) => {
+  return latinNumber.split('').map(digit => latinToArabic[digit] || digit).join('');
+};
+
 export const latinToArabic: Record<string, string> = {
   '1': '١',
   '2': '٢',

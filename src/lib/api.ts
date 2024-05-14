@@ -1,4 +1,4 @@
-import type { VerseUthmani } from "@/types/types";
+import type { QuranTranslationResponse, Translation, VerseUthmani } from "@/types/types";
 const API_URL = 'https://api.quran.com/api/v4'
 
 export async function fetchQuranVersesUthmani(verseKey: string) {
@@ -20,6 +20,33 @@ export async function fetchQuranVersesUthmani(verseKey: string) {
   }
 }
 
+export async function fetchQuranTranslation(verseKey: string, translationId: number): Promise<Translation[]> {
+  try {
+    const response = await fetch(`${API_URL}/quran/translations/${translationId}?verse_key=${verseKey}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch translations');
+    }
+    const data: QuranTranslationResponse = await response.json();
+    return data.translations;
+  } catch (error) {
+    console.error('Error fetching translations:', error);
+    throw error;
+  }
+}
+
+export async function fetchRandomVerse() {
+  try {
+    const response = await fetch(`${API_URL}/verses/random`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch random verse');
+    }
+    const data = await response.json();
+    return data.verse;
+  } catch (error) {
+    console.error('Error fetching random verse:', error);
+    throw error;
+  }
+}
 
 export const fetchVersesByChapter = async (chapterNumber: string, page: number, perPage: number) => {
   try {

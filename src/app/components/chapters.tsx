@@ -100,7 +100,7 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
       chapter.name_complex.toLowerCase().includes(searchQuery.toLowerCase()) ||
       chapter.translated_name.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       chapter.name_simple.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      chapter.name_complex.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chapter.id.toLocaleString().includes(searchQuery) ||
       chapter.name_arabic.includes(searchQuery)
     );
     setFilteredChapters(filtered);
@@ -109,7 +109,7 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
   const displayedChapters = limit ? randomChapterIndices.map((index) => chapterList[index]) : filteredChapters;
 
   return (
-    <main className="w-full md:w-[85%] lg:w-[75%]">
+    <main className="w-full md:w-[85%] lg:w-[75%] pb-10">
       {isSearchEnabled && (
         <div className="px-4 w-full flex justify-between">
           <div className="relative w-[45%] flex space-x-3">
@@ -132,7 +132,10 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
           </Select>
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
+      {isSearchEnabled && (
+        <p className="px-5 my-3 text-xs font-semibold text-gray-500">{filteredChapters.length} result{filteredChapters.length !== 1 ? "s" : ""} found</p>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-4">
         {error && <p className="text-red-500">{error}</p>}
         {displayedChapters.map((chapter) => (
           <HoverCard key={chapter.id}>
@@ -177,7 +180,7 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
                   <Separator className="mb-1 mt-2"/>
                   {chapter.pages.length > 0 && (
                     <p className="flex flex-row justify-between font-semibold text-xs">
-                      <span >Pages:</span>{" "}
+                      <span>Pages:</span>{" "}
                       {chapter.pages.reduce((acc: (number | string)[], page) => {
                         if (!acc.includes(page)) {
                           acc.push(page);

@@ -5,19 +5,21 @@ export interface VerseUthmani {
   text_uthmani: string;
 }
 
+export interface Verse {
+  id: number;
+  verse_number: number;
+  verse_key: string;
+  hizb_number: number;
+  rub_el_hizb_number: number;
+  ruku_number: number;
+  manzil_number: number;
+  sajdah_number: number | null;
+  page_number: number;
+  juz_number: number;
+}
+
 export interface VersesByChapter {
-  verses: {
-    id: number;
-    verse_number: number;
-    verse_key: string;
-    hizb_number: number;
-    rub_el_hizb_number: number;
-    ruku_number: number;
-    manzil_number: number;
-    sajdah_number: number | null;
-    page_number: number;
-    juz_number: number;
-  }[];
+  verses: Verse[];
   pagination: {
     per_page: number;
     current_page: number;
@@ -50,4 +52,23 @@ export interface ChapterInfo {
   short_text: string;
   source: string;
   text: string;
+}
+
+export interface QuranTranslationResponse {
+  translations: Translation[];
+  meta: TranslationMeta;
+}
+
+export interface Translation {
+  resource_id: number;
+  text: string;
+}
+
+export interface TranslationMeta {
+  translation_name: string;
+  author_name: string;
+  filters: {
+      verse_key: string;
+      resource_id: number;
+  };
 }
