@@ -19,7 +19,7 @@ interface SurahsGridProps {
   };
 }
 
-export function SurahsGrid({ limit }: SurahsGridProps) {
+export function ChaptersGrid({ limit }: SurahsGridProps) {
   const [chapterList, setChapterList] = useState<Chapter[]>([]);
   const [randomChapterIndices, setRandomChapterIndices] = useState<number[]>([]);
   const [screenWidth, setScreenWidth] = useState<number>(() => {
@@ -99,13 +99,13 @@ export function SurahsGrid({ limit }: SurahsGridProps) {
                     <p className="font-bold">{Number(chapter.id).toLocaleString('ar-EG')}</p>
                   </div>
                   <div className="flex flex-col justify-center">
-                    <p className="font-semibold">{chapter.name_complex}</p>
+                    <p className="text-sm font-semibold">{chapter.name_complex}</p>
                     <p className="text-xs">{chapter.translated_name.name}</p>
                   </div>
                 </div>
                 <div className="flex flex-col justify-end text-end flex-grow-0 w-auto">
                   <p className="font-bold text-sm">{chapter.name_arabic}</p>
-                  <p className="text-xs">{chapter.verses_count} Ayat</p>
+                  <p className="text-xs">{chapter.verses_count} Verses</p>
                 </div>
               </div>
             </Link>
@@ -114,6 +114,8 @@ export function SurahsGrid({ limit }: SurahsGridProps) {
             <HoverCardContent className="w-fit">
               <div className="flex flex-col">
                 <div className="flex flex-col">
+                  <p className="font-bold text-xs">{chapter.name_simple}</p>
+                  <Separator className="mb-1 mt-2"/>
                   <p  className="font-bold text-xs">Revelation</p>
                   <div className="flex flex-row justify-between capitalize font-semibold text-xs space-x-10">
                     <span>Place:</span>

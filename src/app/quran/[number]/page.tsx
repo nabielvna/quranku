@@ -15,7 +15,7 @@ const convertVersesToUthmani = (verses: any[]): VerseUthmani[] => {
   }));
 };
 
-const Page = ({ params }: { params: { nomor: string } }) => {
+const Page = ({ params }: { params: { number: string } }) => {
   // State variables
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [versesUthmani, setVersesUthmani] = useState<VerseUthmani[]>([]);
@@ -25,16 +25,16 @@ const Page = ({ params }: { params: { nomor: string } }) => {
     const fetchData = async () => {
       try {
         const chapters = await fetchChapters();
-        const currentChapter = chapters.find((chapter: Chapter) => chapter.id === parseInt(params.nomor));
+        const currentChapter = chapters.find((chapter: Chapter) => chapter.id === parseInt(params.number));
         setChapter(currentChapter || null);
 
         if (currentChapter) {
-          const firstPageData: VersesByChapter = await fetchVersesByChapter(params.nomor, 1, 50);
+          const firstPageData: VersesByChapter = await fetchVersesByChapter(params.number, 1, 50);
           const totalPages = firstPageData.pagination.total_pages;
 
           const allVerses: VerseUthmani[] = [];
           for (let i = 1; i <= totalPages; i++) {
-            const pageData: VersesByChapter = await fetchVersesByChapter(params.nomor, i, 50);
+            const pageData: VersesByChapter = await fetchVersesByChapter(params.number, i, 50);
             const convertedVerses = convertVersesToUthmani(pageData.verses);
             
             const promises = convertedVerses.map((verse) => fetchQuranVersesUthmani(verse.verse_key));
@@ -50,7 +50,7 @@ const Page = ({ params }: { params: { nomor: string } }) => {
     };
 
     fetchData();
-  }, [params.nomor]);
+  }, [params.number]);
 
   const handleOptionChange = (option: string) => {
     const isSelected = selectedOptions.includes(option);
