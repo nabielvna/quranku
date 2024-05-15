@@ -1,5 +1,21 @@
-import type { QuranTranslationResponse, Translation, VerseUthmani } from "@/types/types";
+import type { Juz, QuranTranslationResponse, Translation, VerseUthmani } from "@/types/types";
 const API_URL = 'https://api.quran.com/api/v4'
+
+
+export async function fetchJuzs(): Promise<Juz[]> {
+  try {
+    const response = await fetch(`${API_URL}/juzs`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch Juzs');
+    }
+    const data = await response.json();
+    return data.juzs;
+  } catch (error) {
+    console.error('Error fetching Juzs:', error);
+    throw error;
+  }
+}
+
 
 export async function fetchQuranVersesUthmani(verseKey: string) {
   try {

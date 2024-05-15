@@ -19,7 +19,6 @@ const convertVersesToUthmani = (verses: any[]): VerseUthmani[] => {
 };
 
 const Page = ({ params }: { params: { number: string } }) => {
-  // State variables
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [versesUthmani, setVersesUthmani] = useState<VerseUthmani[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['']);
@@ -41,17 +40,16 @@ const Page = ({ params }: { params: { number: string } }) => {
           const firstPageData: VersesByChapter = await fetchVersesByChapter(params.number, 1, 50);
           const totalPages = firstPageData.pagination.total_pages;
 
-          const allVerses: VerseUthmani[] = [];
+          let allVerses: any[] = [];
           for (let i = 1; i <= totalPages; i++) {
             const pageData: VersesByChapter = await fetchVersesByChapter(params.number, i, 50);
-            const convertedVerses = convertVersesToUthmani(pageData.verses);
-            
-            const promises = convertedVerses.map((verse) => fetchQuranVersesUthmani(verse.verse_key));
-            const uthmaniVerses = await Promise.all(promises);
-            allVerses.push(...uthmaniVerses.flat());
-            
-            setVersesUthmani(allVerses);
+            allVerses = allVerses.concat(pageData.verses);
           }
+
+          const convertedVerses = convertVersesToUthmani(allVerses);
+          const promises = convertedVerses.map((verse) => fetchQuranVersesUthmani(verse.verse_key));
+          const uthmaniVerses = await Promise.all(promises);
+          setVersesUthmani(uthmaniVerses.flat());
         }
       } catch (error) {
         console.error("Error fetching data:", error);
