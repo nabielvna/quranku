@@ -1,4 +1,3 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 
 interface TabsTriggerGroupProps {
@@ -7,22 +6,29 @@ interface TabsTriggerGroupProps {
 }
 
 const TabsTriggerGroup: React.FC<TabsTriggerGroupProps> = ({ selectedTab, onTabChange }) => {
-
   const handleTabChange = (value: string) => {
     onTabChange(value);
   };
 
   return (
-    <Tabs defaultValue="chapter">
-      <TabsList>
-        <TabsTrigger value="chapter" onClick={() => handleTabChange("chapter")} active={selectedTab === "chapter"}>
-          Chapters
-        </TabsTrigger>
-        <TabsTrigger value="juz" onClick={() => handleTabChange("juz")} active={selectedTab === "juz"}>
-          Juz
-        </TabsTrigger>
-      </TabsList>
-    </Tabs>
+    <div className="flex">
+      <button
+        className={`px-4 py-2 font-semibold focus:outline-none ${
+          selectedTab === "chapter" ? "text-teal-500 border-b-2 border-teal-500" : "text-gray-500"
+        }`}
+        onClick={() => handleTabChange("chapter")}
+      >
+        Chapters
+      </button>
+      <button
+        className={`px-4 py-2 font-semibold focus:outline-none ${
+          selectedTab === "juz" ? "text-teal-500 border-b-2 border-teal-500" : "text-gray-500"
+        }`}
+        onClick={() => handleTabChange("juz")}
+      >
+        Juz
+      </button>
+    </div>
   );
 };
 
