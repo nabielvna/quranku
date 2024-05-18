@@ -13,7 +13,7 @@ interface JuzCardProps {
 const JuzCard = ({ juz, chapterList, selectedJuzId, handleJuzClick, juzRef }: JuzCardProps) => (
   <div ref={juzRef}>
     <div
-      className={`${selectedJuzId === juz.id && 'border-teal-300'} flex flex-col border-2 space-y-2 rounded-sm p-3 hover:border-teal-300 hover:shadow-teal-300 hover:cursor-pointer`}
+      className={`${selectedJuzId === juz.id ? 'border-teal-300' : ''} flex flex-col border-2 space-y-2 rounded-sm p-3 hover:border-teal-300 hover:shadow-teal-300 hover:cursor-pointer`}
       onClick={() => handleJuzClick(juz.id)}
     >
       <div className="flex flex-row justify-between items-center">

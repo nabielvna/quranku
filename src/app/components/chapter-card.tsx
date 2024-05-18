@@ -5,16 +5,11 @@ import { Separator } from "@/components/ui/separator";
 
 interface ChapterCardProps {
   chapter: Chapter;
-  hoveredChapterId: number | null;
-  setHoveredChapterId: (id: number | null) => void;
 }
 
-const ChapterCard = ({ chapter, hoveredChapterId, setHoveredChapterId }: ChapterCardProps) => (
+const ChapterCard = ({ chapter }: ChapterCardProps) => (
   <HoverCard>
-    <HoverCardTrigger
-      onMouseEnter={() => setHoveredChapterId(chapter.id)}
-      onMouseLeave={() => setHoveredChapterId(null)}
-    >
+    <HoverCardTrigger>
       <Link key={chapter.id} href={`/quran/${chapter.id}`}>
         <div className="border-2 rounded-sm flex flex-row justify-between items-center p-3 hover:border-teal-300 hover:shadow-teal-300 hover:shadow-xs">
           <div className="flex flex-row gap-3">
@@ -33,7 +28,6 @@ const ChapterCard = ({ chapter, hoveredChapterId, setHoveredChapterId }: Chapter
         </div>
       </Link>
     </HoverCardTrigger>
-    {hoveredChapterId === chapter.id && (
       <HoverCardContent className="w-fit">
         <div className="flex flex-col">
           <div className="flex flex-col">
@@ -63,7 +57,6 @@ const ChapterCard = ({ chapter, hoveredChapterId, setHoveredChapterId }: Chapter
           )}
         </div>
       </HoverCardContent>
-    )}
   </HoverCard>
 );
 
