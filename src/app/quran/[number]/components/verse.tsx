@@ -1,18 +1,17 @@
-import { VerseUthmani } from "@/types/types";
+import { VerseWithTranslation } from "@/types/types";
 import { convertLatinToArabic } from "@/utils/number-dict";
 
 type Props = {
-  verse: VerseUthmani;
+  verse: VerseWithTranslation;
   selectedOptions: string[];
 };
 
 const QuranVerse: React.FC<Props> = ({ verse, selectedOptions }) => {
-
-  const getArabicVerseKey = () => {
+  const getVerseKey = () => {
     const colonIndex = verse.verse_key.indexOf(':');
     if (colonIndex !== -1) {
       const latinNumbers = verse.verse_key.substring(colonIndex + 1);
-      return convertLatinToArabic(latinNumbers); 
+      return latinNumbers;
     }
     return verse.verse_key; 
   };
@@ -20,14 +19,10 @@ const QuranVerse: React.FC<Props> = ({ verse, selectedOptions }) => {
   return (
     <div className="flex flex-col space-y-2 my-5">
       <div className="flex flex-col mt-2">
-        <span className="text-end text-xl font-semibold">{verse.text_uthmani} - {getArabicVerseKey()}</span>
+        <span className="text-end text-xl font-semibold">{verse.text_uthmani} - {convertLatinToArabic(getVerseKey())}</span>
 
-        {selectedOptions.includes('Latin') && (
-          <span> {verse.verse_key}</span>
-        )}
-
-        {selectedOptions.includes('Terjemah') && (
-          <span> {verse.verse_key}</span>
+        {selectedOptions.includes('Translation') && (
+          <span>{verse.translation} - {getVerseKey()}</span>
         )}
       </div>
     </div>

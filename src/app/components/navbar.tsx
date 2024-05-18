@@ -19,7 +19,8 @@ export default function Navbar() {
       <div className="w-full mx-auto px-8">
         <div className="flex items-center justify-between h-16">
           <div>
-            <Image width={40} height={40} src="/logo.jpg" alt="Logo" />
+            <Image width={40} height={40} src="/logo.svg" className="dark:hidden" alt="Logo" />
+            <Image width={40} height={40} src="/logo-dark.svg" className="hidden dark:block" alt="Logo" />
           </div>
           <div className="flex-shrink-0 flex items-center">
             <Link href="/">

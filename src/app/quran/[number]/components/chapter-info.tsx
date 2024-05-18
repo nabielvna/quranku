@@ -8,7 +8,15 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface ChapterInfoProps {
   id: number;
@@ -30,48 +38,93 @@ const ChapterInfoComponent: React.FC<ChapterInfoProps> = ({ id }) => {
     getChapterInfo();
   }, [id]);
 
-  const modifyHtmlString = (htmlString: string) => {
+  const modifyHtmlStringForHover = (htmlString: string) => {
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = htmlString;
 
     const h2Elements = tempDiv.querySelectorAll("h2");
-    h2Elements.forEach((h2) => {
-      h2.classList.add("font-semibold");
-      const separator = document.createElement("hr"); 
-      separator.classList.add("my-4"); 
-      h2.before(separator);
+
+    const indexedHtmlArray: string[] = [];
+    h2Elements.forEach((h2, index) => {
+        const indexSpan = document.createElement("span");
+        indexSpan.textContent = `${index + 1}. `;
+        const wrapperDiv = document.createElement("div");
+        wrapperDiv.classList.add("flex", "flex-row", "text-sm", "space-x-2");
+        wrapperDiv.appendChild(indexSpan);
+        wrapperDiv.appendChild(h2);
+        indexedHtmlArray.push(wrapperDiv.outerHTML);
+    });
+
+    const modifiedHtml = indexedHtmlArray.join('');
+
+    const finalHtml = `<div class="flex flex-col">${modifiedHtml}</div>`;
+
+    return finalHtml;
+  };  
+
+  const modifyHtmlStringForDialog = (htmlString: string) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlString;
+
+    const h2Elements = tempDiv.querySelectorAll("h2");
+    h2Elements.forEach((h2, index) => {
+        h2.classList.add("font-semibold");
+        if (index !== 0) {
+            const separator = document.createElement("hr");
+            separator.classList.add("my-4");
+            h2.before(separator);
+        }
     });
 
     return tempDiv.innerHTML;
-  };
+};
 
   if (!info) {
     return <p>Loading...</p>;
   }
 
-  const modifiedHtml = modifyHtmlString(info.text);
-
   return (
     <>
-      <p>{info.short_text}</p>
-      <HoverCard>
-        <HoverCardTrigger asChild>
-          <span className="font-semibold text-sm text-gray-500 hover:underline hover:cursor-pointer">read more</span>
-        </HoverCardTrigger>
-        <HoverCardContent className="w-[100vh]">
-          <div className="flex justify-between space-x-4">
-            <div className="space-y-1">
-              <h4 className="font-semibold">MORE INFO</h4>
-              <div className="text-sm text-justify" dangerouslySetInnerHTML={{ __html: modifiedHtml }} />
-              <div className="flex items-center pt-2">
-                <span className="text-xs text-muted-foreground">
+    <p>{info.short_text}</p>
+    <Dialog>
+      <DialogTrigger>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <span className="font-semibold text-sm text-gray-500 hover:underline hover:cursor-pointer">read more</span>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-fit">
+            <div className="flex justify-between space-x-4">
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-start">TOPICS</p>
+                <div className="text-sm text-justify" dangerouslySetInnerHTML={{ __html: modifyHtmlStringForHover(info.text) }} />
+                <span className="text-xs">
                   {info.source}
                 </span>
               </div>
             </div>
-          </div>
-        </HoverCardContent>
-      </HoverCard>
+          </HoverCardContent>
+        </HoverCard>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>MORE INFO</DialogTitle>
+          <DialogDescription>
+            <ScrollArea className="h-[70vh] w-full rounded-md border p-4">
+              <div className="flex justify-between space-x-4">
+                <div className="space-y-1">
+                  <div className="text-sm text-justify" dangerouslySetInnerHTML={{ __html: modifyHtmlStringForDialog(info.text) }} />
+                  <div className="flex items-center pt-2">
+                    <span className="text-xs">
+                      {info.source}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ScrollArea>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
     </>
   );
 }

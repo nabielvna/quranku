@@ -8,12 +8,14 @@ export interface Juz {
   last_verse_id: number;
   verses_count: number;
 }
-
-
 export interface VerseUthmani {
   id: number;
   verse_key: string;
   text_uthmani: string;
+}
+
+export interface VerseWithTranslation extends VerseUthmani {
+  translation: string;
 }
 
 export interface Verse {
