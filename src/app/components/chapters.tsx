@@ -20,6 +20,7 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
   const [chapterList, setChapterList] = useState<Chapter[]>([]);
   const [juzList, setJuzList] = useState<Juz[]>([]);
   const [filteredChapters, setFilteredChapters] = useState<Chapter[]>([]);
+  const [filteredJuzs, setFilteredJuzs] = useState<Juz[]>([]);
   const [randomChapterIndices, setRandomChapterIndices] = useState<number[]>([]);
   const [screenWidth, setScreenWidth] = useState<number>(() => {
     if (typeof window !== 'undefined') {
@@ -44,6 +45,7 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
         }
         if (juzs) {
           setJuzList(juzs);
+          setFilteredJuzs(juzs);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -89,15 +91,29 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
   }, [chapterList, limit, screenWidth]);
 
   useEffect(() => {
-    const filtered = chapterList.filter((chapter) =>
+    const filteredChapters = chapterList.filter((chapter) =>
       chapter.name_complex.toLowerCase().includes(searchQuery.toLowerCase()) ||
       chapter.translated_name.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       chapter.name_simple.toLowerCase().includes(searchQuery.toLowerCase()) ||
       chapter.id.toLocaleString().includes(searchQuery) ||
       chapter.name_arabic.includes(searchQuery)
     );
-    setFilteredChapters(filtered);
-  }, [searchQuery, chapterList]);
+    setFilteredChapters(filteredChapters);
+
+    const filteredJuzs = juzList.filter((juz) =>
+      Object.entries(juz.verse_mapping).some(([chapterId]) => {
+        const chapter = chapterList.find((ch) => ch.id === parseInt(chapterId));
+        return chapter && (
+          chapter.name_complex.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          chapter.translated_name.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          chapter.name_simple.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          chapter.id.toLocaleString().includes(searchQuery) ||
+          chapter.name_arabic.includes(searchQuery)
+        );
+      })
+    );
+    setFilteredJuzs(filteredJuzs);
+  }, [searchQuery, chapterList, juzList]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -127,7 +143,6 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
           key={chapter.id}
           chapter={chapter}
           hoveredChapterId={hoveredChapterId}
-          setHoveredChapterId={setHoveredChapterId}
         />
       ))}
     </div>
@@ -136,14 +151,14 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
   const renderJuzs = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-4">
       {error && <p className="text-red-500">{error}</p>}
-      {juzList.map((juz) => (
+      {filteredJuzs.map((juz) => (
         <JuzCard
           key={juz.id}
           juz={juz}
           chapterList={chapterList}
           selectedJuzId={selectedJuzId}
           handleJuzClick={handleJuzClick}
-          juzRef={juzRef} // Pass the juzRef here
+          juzRef={juzRef}
         />
       ))}
     </div>
@@ -161,7 +176,8 @@ export function ChaptersGrid({ limit, isSearchEnabled }: SurahsGridProps) {
       )}
       {isSearchEnabled && (
         <p className="px-5 my-3 text-xs font-semibold text-gray-500">
-          {filteredChapters.length} result{filteredChapters.length !== 1 ? "s" : ""} found
+          {selectedTab === 'chapter' ? filteredChapters.length : filteredJuzs.length} result
+          {selectedTab === 'chapter' ? filteredChapters.length !== 1 : filteredJuzs.length !== 1 ? "s" : ""} found
         </p>
       )}
       <div className={`w-full`}>
