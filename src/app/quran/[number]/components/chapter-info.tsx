@@ -105,11 +105,11 @@ const ChapterInfoComponent: React.FC<ChapterInfoProps> = ({ id }) => {
           </HoverCardContent>
         </HoverCard>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-[95%] md:w-[70%]">
         <DialogHeader>
           <DialogTitle>MORE INFO</DialogTitle>
           <DialogDescription>
-            <ScrollArea className="h-[70vh] w-full rounded-md border p-4">
+            <ScrollArea className="h-[80vh] md:h-[70vh] w-full rounded-md border p-4">
               <div className="flex justify-between space-x-4">
                 <div className="space-y-1">
                   <div className="text-sm text-justify" dangerouslySetInnerHTML={{ __html: modifyHtmlStringForDialog(info.text) }} />
