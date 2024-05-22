@@ -37,7 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          <main>
+          <main className="mt-16">
             {children}
             <footer className="w-full py-4 bg-gray-200 dark:bg-slate-800 text-center">
               <p>&copy; {new Date().getFullYear()} Lucky Strike Team. All rights reserved.</p>

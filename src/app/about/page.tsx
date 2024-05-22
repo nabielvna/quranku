@@ -7,7 +7,7 @@ export default function Page() {
   ];
 
   return (
-    <main className="flex flex-col h-screen items-center p-10 mt-24">
+    <main className="flex flex-col h-screen items-center p-10">
       <div className="max-w-4xl mb-8">
         <h1 className="text-4xl font-bold mb-4">About Us</h1>
         <p className="text-lg">
