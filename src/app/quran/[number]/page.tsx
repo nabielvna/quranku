@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { fetchChapters, fetchVersesByChapter, fetchQuranVersesUthmani, fetchQuranTranslation } from "@/lib/api";
-import type { Chapter, VersesByChapter, VerseWithTranslation } from "@/types/types";
+import type { Chapter, VersesFetch, VerseWithTranslation } from "@/types/types";
 import ChapterInfoComponent from "./components/chapter-info";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -27,12 +27,12 @@ const fetchData = async (chapterId: number) => {
     throw new Error("Chapter not found");
   }
 
-  const firstPageData: VersesByChapter = await fetchVersesByChapter(chapterId.toString(), 1, 50);
+  const firstPageData: VersesFetch = await fetchVersesByChapter(chapterId.toString(), 1, 50);
   const totalPages = firstPageData.pagination.total_pages;
 
   let allVerses: any[] = [];
   for (let i = 1; i <= totalPages; i++) {
-    const pageData: VersesByChapter = await fetchVersesByChapter(chapterId.toString(), i, 50);
+    const pageData: VersesFetch = await fetchVersesByChapter(chapterId.toString(), i, 50);
     allVerses = allVerses.concat(pageData.verses);
   }
 
@@ -52,6 +52,7 @@ const fetchData = async (chapterId: number) => {
 };
 
 const Page = ({ params }: { params: { number: string } }) => {
+  console.log(params.number);
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [versesUthmani, setVersesUthmani] = useState<VerseWithTranslation[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['']);

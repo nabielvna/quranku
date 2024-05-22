@@ -64,6 +64,20 @@ export async function fetchRandomVerse() {
   }
 }
 
+export const fetchVersesByPage = async (pageNumber: string) => {
+  try {
+    const response = await fetch(`${API_URL}/verses/by_page/${pageNumber}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data from the API');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data from the API:', error);
+    throw error;
+  }
+};
+
 export const fetchVersesByChapter = async (chapterNumber: string, page: number, perPage: number) => {
   try {
     const response = await fetch(`${API_URL}/verses/by_chapter/${chapterNumber}?page=${page}&per_page=${perPage}`);

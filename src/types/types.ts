@@ -31,7 +31,7 @@ export interface Verse {
   juz_number: number;
 }
 
-export interface VersesByChapter {
+export interface VersesFetch {
   verses: Verse[];
   pagination: {
     per_page: number;

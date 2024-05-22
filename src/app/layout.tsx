@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import Navbar from "./components/navbar";
 
+
 export const metadata: Metadata = {
   title: "Quranku",
   description: "Quranku - Easy Al-Quran webapp for all people",
@@ -36,10 +37,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
-          <footer className="w-full py-4 bg-gray-200 dark:bg-slate-800 text-center">
-            <p>&copy; {new Date().getFullYear()} Lucky Strike Team. All rights reserved.</p>
-          </footer>
+          <main>
+            {children}
+            <footer className="w-full py-4 bg-gray-200 dark:bg-slate-800 text-center">
+              <p>&copy; {new Date().getFullYear()} Lucky Strike Team. All rights reserved.</p>
+            </footer>
+          </main>
         </ThemeProvider>
       </body>
     </html>

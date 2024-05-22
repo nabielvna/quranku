@@ -18,12 +18,6 @@ export default function Page() {
           <RandomVerse/>
         </div>
       </section>
-      <div className="relative w-full mb-10">
-        <div className="absolute top-1/2 left-1/2 z-50 transform -translate-x-1/2 -translate-y-[50%] md:-translate-y-[40%]  w-full md:w-[65%] h-[10vh] rounded-full bg-white dark:bg-[#353969]">
-        </div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 md:-translate-x-[51.2%] -translate-y-[30%] w-full md:w-[65%] h-[10vh] rounded-full bg-[#353969] dark:bg-[#292d56]">
-        </div>
-      </div>
       <section className="my-16">
         <div className="w-full flex flex-col items-center">
            <p className="font-bold text-4xl">Alquran</p>

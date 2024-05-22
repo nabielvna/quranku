@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 w-full bg-white dark:bg-slate-950 shadow-md z-10">
+    <nav className="fixed top-0 w-full bg-white dark:bg-slate-950 shadow-md z-10"> 
       <div className="w-full mx-auto px-8">
         <div className="flex items-center justify-between h-16">
           <div>
@@ -31,7 +31,6 @@ export default function Navbar() {
             <div className="ml-auto flex items-center space-x-6 font-semibold"> 
               <Link href="/quran">Al Quran</Link>
               <Link href="/about">About</Link>
-              <Link href="/contact">Contact</Link>
               <div><ModeToggle /></div>
             </div>
           </div>
