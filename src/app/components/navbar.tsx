@@ -24,7 +24,7 @@ export default function Navbar() {
           </div>
           <div className="flex-shrink-0 flex items-center">
             <Link href="/">
-              <span className="text-4xl font-bold">Qur&apos;anKu</span>
+              <span className="text-4xl md:ms-36 font-bold">Qur&apos;anKu</span>
             </Link>
           </div>
           <div className="hidden md:block">
