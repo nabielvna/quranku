@@ -1,18 +1,20 @@
 import Image from "next/image";
 
 export default function Page() {
+  // Daftar gambar
   const images = [
     { src: "/Gian.jpg", alt: "Gian", Name: "Stevanza Gian Maheswara" },
     { src: "/Nabiel.jpg", alt: "Nabiel", Name: "Vidiawan Nabiel Arrasyid" },
   ];
 
+  // Tampilan komponen
   return (
-    <main className="flex flex-col h-screen items-center p-10">
+    <main className="flex flex-col items-center p-10">
       <div className="max-w-4xl mb-8">
         <h1 className="text-4xl font-bold mb-4">About Us</h1>
         <p className="text-lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
-          Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.
+          Assalamualaikum, kami dari team lucky strike dari cabang lomba design aplikasi al-qur'an yang diselenggarkan oleh MTQ ITS.
+          dan kami berasaldari departemen teknik Informatika ITS tahun 2022.
         </p>
       </div>
 
@@ -32,8 +34,8 @@ export default function Page() {
       <div className="max-w-4xl text-lg">
         <h2 className="text-2xl font-bold mb-4">Our Mission</h2>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
-          Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.
+          Harapan kami membuat website ini bukan semata-mata ingin memenangkan lomba, tetapi kami berharap website ini bisa kami kembangkan agar bisa digunakan oleh semua umat muslim.
+          Dan kami berharap dengan adanya website ini kami dapat berkontribusi kepada masyarakat dan dapat memudahkan umat muslim dalam membaca Al-Quran 
         </p>
       </div>
 
@@ -42,8 +44,8 @@ export default function Page() {
       <div className="max-w-4xl text-lg">
         <h2 className="text-2xl font-bold mb-4">Our Values</h2>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
-          Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.
+          Sebagai mahasiswa teknik Informatika, kami mempunyai potensi untuk memajukan teknolgi di Indonesia dan kami sangat senang untuk berkontribusi kepada masyarakat.
+          Terima Kasih.
         </p>
       </div>
     </main>
